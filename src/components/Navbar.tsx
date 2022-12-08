@@ -11,6 +11,7 @@ import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
 import { auth, logout } from '../api/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useEffect, useState } from 'react';
@@ -22,6 +23,8 @@ const Navbar = (): JSX.Element => {
   const [user, loading, error] = useAuthState(auth);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  const navigate = useNavigate();
 
   const handleUserMenuClicked = (event: React.MouseEvent<HTMLLIElement>, key: string) => {
     if (key === 'Logout') {
@@ -43,8 +46,9 @@ const Navbar = (): JSX.Element => {
     setAnchorElNav(event.currentTarget);
   };
 
-  const handleCloseNav = () => {
+  const handleCloseNav = (page: string) => {
     setAnchorElNav(null);
+    navigate(`/${page.toLowerCase()}`);
   };
 
   useEffect(() => {
@@ -56,7 +60,12 @@ const Navbar = (): JSX.Element => {
   }, [user, loading, error])
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: (theme) => theme.palette.primary.main,
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <RocketLaunchIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -108,7 +117,7 @@ const Navbar = (): JSX.Element => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNav}>
+                <MenuItem key={page} onClick={(e) => handleCloseNav(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -137,8 +146,14 @@ const Navbar = (): JSX.Element => {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNav}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                onClick={(e) => handleCloseNav(page)}
+                color="info"
+                sx={{ 
+                  mr: 1,
+                  ml: 1,
+                  color: 'white',
+                  display: 'block',
+                }}
               >
                 {page}
               </Button>

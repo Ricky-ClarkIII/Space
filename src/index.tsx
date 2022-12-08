@@ -2,8 +2,35 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import reportWebVitals from './reportWebVitals';
+
+const theme = createTheme({
+  typography: {
+    fontFamily: [
+      'Monospace',
+    ].join(','),
+  },
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#010048',
+    },
+    secondary: {
+      main: '#d148ff',
+    },
+    error: {
+      main: '#ff0f00',
+    },
+    info: {
+      main: '#4bcfff',
+    },
+    success: {
+      main: '#00e20b',
+    },
+  },
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,7 +38,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <CssBaseline />
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>
 );
 
