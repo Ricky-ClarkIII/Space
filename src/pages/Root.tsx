@@ -13,7 +13,7 @@ const Root = (): JSX.Element => {
 
   useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate('/gallery');
     } else {
       navigate('/login');
     }

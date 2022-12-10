@@ -37,7 +37,7 @@ const Login = (): JSX.Element => {
 
   useEffect(() => {
     if (user && !error) {
-      navigate('/');
+      navigate('/gallery');
     }
   }, [user, error, navigate]);
 
