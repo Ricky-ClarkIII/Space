@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -10,18 +11,21 @@ const Root = (): JSX.Element => {
 
   const navigate = useNavigate();
 
-  if (!user) {
-    navigate('/login');
-    return <></>;
-  } else {
-    return (
-      <>
-        <Navbar />
-        <Outlet />
-        <Footer />
-      </>
-    );
-  }
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+      <Footer />
+    </>
+  );
 };
 
 export default Root;

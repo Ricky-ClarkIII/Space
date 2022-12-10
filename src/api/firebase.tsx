@@ -1,4 +1,8 @@
 import { initializeApp } from "firebase/app";
+import { 
+  initializeAppCheck, 
+  ReCaptchaV3Provider
+} from "firebase/app-check";
 import {
   GoogleAuthProvider,
   getAuth,
@@ -7,14 +11,16 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
+  updateProfile,
+  sendEmailVerification,
 } from "firebase/auth";
 import {
   getFirestore,
   query,
   getDocs,
- collection,
- where,
- addDoc,
+  collection,
+  where,
+  addDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -27,6 +33,12 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider("6Lc94GojAAAAAFS2qzz00aez2q4mWF3E27D5xNb5"),
+  isTokenAutoRefreshEnabled: true
+});
+
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
@@ -52,7 +64,8 @@ export const signInWithGoogle = async () => {
 
 export const logInWithEmailAndPassword = async (email: string, password: string) => {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    let user = await signInWithEmailAndPassword(auth, email, password);
+    console.log(user);
   } catch (err) {
     console.error(err);
   }
@@ -60,14 +73,22 @@ export const logInWithEmailAndPassword = async (email: string, password: string)
 
 export const registerWithEmailAndPassword = async (displayName: string, email: string, password: string) => {
   try {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const res = await createUserWithEmailAndPassword(auth, email, password)
     const user = res.user;
+
     await addDoc(collection(db, "users"), {
       uid: user.uid,
-      displayName,
+      displayName: displayName,
       authProvider: "local",
-      email,
+      email: email,
     });
+
+    await updateProfile(user, {
+      displayName: displayName,
+    });
+
+    await sendEmailVerification(user);
+
   } catch (err) {
     console.error(err);
   }

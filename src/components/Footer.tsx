@@ -6,8 +6,8 @@ const Footer = () => {
   return (
     <Box
       sx={{
-        backgroundColor: 'secondary.main',
-        color: 'primary.contrastText',
+        backgroundColor: (theme) => theme.palette.primary.main,
+        color: (theme) => theme.palette.primary.contrastText,
         py: 6,
       }}
     >

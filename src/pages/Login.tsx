@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
@@ -35,9 +35,11 @@ const Login = (): JSX.Element => {
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const confirmPasswordRef = useRef<HTMLInputElement | null>(null);
 
-  if (user && !error) {
-    navigate('/');
-  }
+  useEffect(() => {
+    if (user && !error) {
+      navigate('/');
+    }
+  }, [user, error, navigate]);
 
   return (
     <Box
@@ -201,6 +203,7 @@ const Login = (): JSX.Element => {
                     placeholder="Password"
                     fullWidth
                     sx={{ mb: 2 }}
+                    onChange={() => setPasswordsDoNotMatch(false)}
                     inputRef={passwordRef}
                     error={passwordsDoNotMatch}
                   />
@@ -210,6 +213,7 @@ const Login = (): JSX.Element => {
                     placeholder="Confirm Password"
                     fullWidth
                     sx={{ mb: 2 }}
+                    onChange={() => setPasswordsDoNotMatch(false)}
                     inputRef={confirmPasswordRef}
                     error={passwordsDoNotMatch}
                     label={passwordsDoNotMatch ? 'Passwords do not match' : ''}
